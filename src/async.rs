@@ -14,6 +14,7 @@ use tty;
 /// asyncronized from piped input would rarely make sense. In other words, if you pipe standard
 /// output from another process, it won't be reflected in the stream returned by this function, as
 /// this represents the TTY device, and not the piped standard input.
+#[cfg(not(windows))]
 pub fn async_stdin() -> AsyncReader {
     let (send, recv) = mpsc::channel();
 
@@ -28,6 +29,11 @@ pub fn async_stdin() -> AsyncReader {
     AsyncReader {
         recv: recv,
     }
+}
+
+#[cfg(windows)]
+pub fn async_stdin() -> AsyncReader {
+    unimplemented!()
 }
 
 /// An asynchronous reader.

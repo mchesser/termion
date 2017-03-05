@@ -14,16 +14,34 @@
 #[cfg(not(target_os = "redox"))]
 extern crate libc;
 
-#[cfg(not(target_os = "redox"))]
+#[cfg(windows)]
+extern crate winapi;
+#[cfg(windows)]
+extern crate kernel32;
+
+#[cfg(not(any(target_os = "redox", windows)))]
 mod termios;
 
 mod async;
 pub use async::{AsyncReader, async_stdin};
 
+
+#[cfg(not(windows))]
 mod size;
+
+#[cfg(windows)]
+#[path = "size_windows.rs"]
+mod size;
+
 pub use size::terminal_size;
 
+#[cfg(not(windows))]
 mod tty;
+
+#[cfg(windows)]
+#[path = "tty_windows.rs"]
+mod tty;
+
 pub use tty::{is_tty, get_tty};
 
 #[macro_use]
@@ -33,7 +51,14 @@ pub mod color;
 pub mod cursor;
 pub mod event;
 pub mod input;
+
+#[cfg(not(windows))]
 pub mod raw;
+
+#[cfg(windows)]
+#[path = "raw_windows.rs"]
+pub mod raw;
+
 pub mod screen;
 pub mod scroll;
 pub mod style;

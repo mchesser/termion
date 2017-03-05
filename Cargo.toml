@@ -11,3 +11,5 @@ exclude = ["target", "CHANGELOG.md", "image.png", "Cargo.lock"]
 
 [target.'cfg(not(target_os = "redox"))'.dependencies]
 libc = "0.2.8"
+winapi = "0.2"
+kernel32-sys = "0.2"
